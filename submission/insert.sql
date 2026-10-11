@@ -1,0 +1,9 @@
+-- Write one batch INSERT from mobility.ingest_batch into a2_write.events.
+-- Explicit target columns; fixed source order event_id ascending; autocommit on.
+-- Use the same statement for baseline and indexed measurements.
+-- Rebuild logged historical scratch before indexed INSERT or any repeat,
+-- then apply matching scratch indexes when measuring the indexed portfolio.
+-- Count scratch rows as read-only warm-up; record before sizes/count.
+-- EXPLAIN (ANALYZE, BUFFERS) executes INSERT: run it exactly once.
+-- Save the plan, then record after sizes/count. Do not rerun a plain INSERT.
+-- Your INSERT here.

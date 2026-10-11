@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Assignment 2 PostgreSQL",
+      "Group": "KSE Databases",
+      "Host": "db",
+      "Port": 5432,
+      "MaintenanceDB": "assignment2",
+      "Username": "student",
+      "SSLMode": "prefer"
+    }
+  }
+}

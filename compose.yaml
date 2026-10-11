@@ -1,0 +1,67 @@
+name: assignment-2-postgresql
+services:
+  db:
+    image: postgres:18.6@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
+    environment:
+      POSTGRES_DB: assignment2
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-assignment-2-local-password}
+      TZ: UTC
+      PGTZ: UTC
+    command: [postgres, -c, timezone=UTC, -c, log_timezone=UTC, -c, shared_buffers=128MB, -c, work_mem=4MB, -c, maintenance_work_mem=64MB, -c, max_parallel_workers_per_gather=2]
+    ports:
+      - "${POSTGRES_BIND_ADDRESS:-127.0.0.1}:${POSTGRES_PORT:-55433}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  pgadmin:
+    image: dpage/pgadmin4:9.17@sha256:2f4ce946ddf8360680d7eff4eaba1d91859eb6b4003e6623bad5c63a322c2f4d
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-student@course.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-assignment-2-pgadmin-password}
+      PGADMIN_CONFIG_ALLOW_SPECIAL_EMAIL_DOMAINS: "['local']"
+    ports:
+      - "${PGADMIN_BIND_ADDRESS:-127.0.0.1}:${PGADMIN_PORT:-55051}:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, /venv/bin/python3, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1/misc/ping', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  tools:
+    image: assignment-2-tools
+    build:
+      context: ./runtime
+      dockerfile: Dockerfile
+    pull_policy: never
+    profiles: [tools]
+    user: "1000:1000"
+    working_dir: /runtime
+    environment:
+      DATABASE_URL: postgresql://student:${POSTGRES_PASSWORD:-assignment-2-local-password}@db:5432/assignment2
+      PYTHONPATH: /runtime
+      PYTHONDONTWRITEBYTECODE: "1"
+      TZ: UTC
+      HOME: /tmp
+    volumes:
+      - ./runtime:/runtime:ro
+      - ./data:/data:ro
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres-data:
+  pgadmin-data:

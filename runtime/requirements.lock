@@ -1,0 +1,8 @@
+# CPython 3.13 / Linux AMD64 and ARM64; binary-only, no compiler.
+# psycopg-3.2.10-py3-none-any.whl
+psycopg==3.2.10 \
+    --hash=sha256:ab5caf09a9ec42e314a21f5216dbcceac528e0e05142e42eea83a3b28b320ac3
+# cp313 manylinux2014 aarch64 / x86_64 wheels, respectively.
+psycopg-binary==3.2.10 \
+    --hash=sha256:470594d303928ab72a1ffd179c9c7bde9d00f76711d6b0c28f8a46ddf56d9807 \
+    --hash=sha256:a92ff1c2cd79b3966d6a87e26ceb222ecd5581b5ae4b58961f126af806a861ed

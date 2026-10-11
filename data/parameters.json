@@ -1,0 +1,35 @@
+{
+  "reports": {
+    "INSERT": {
+      "order_by": "event_id",
+      "source": "mobility.ingest_batch",
+      "target": "a2_write.events",
+      "timezone": "UTC"
+    },
+    "R1": {
+      "device_id": 42,
+      "limit": 20,
+      "timezone": "UTC"
+    },
+    "R2": {
+      "end": "2026-03-08 00:00:00+00",
+      "start": "2026-03-01 00:00:00+00",
+      "station_id": 7,
+      "timezone": "UTC"
+    },
+    "R3": {
+      "end": "2026-04-01 00:00:00+00",
+      "expected_rows": 992,
+      "start": "2026-03-01 00:00:00+00",
+      "station_count": 32,
+      "timezone": "UTC"
+    },
+    "R4": {
+      "end": "2026-06-30 00:00:00+00",
+      "expected_rows": 5760,
+      "start": "2026-01-01 00:00:00+00",
+      "station_count": 32,
+      "timezone": "UTC"
+    }
+  }
+}
